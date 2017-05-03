@@ -25,7 +25,12 @@ namespace FsiRun
             var pgmfiles = Environment.GetEnvironmentVariable("programfiles(x86)");
             var versions = new[] { "4.1", "4.0" };
             var fsiPath = versions.Select(v => string.Format(fsitemplate, pgmfiles, v))
-                .Where(File.Exists).First();
+                .Where(File.Exists).FirstOrDefault();
+            if (fsiPath == null)
+            {
+                // just hope it's on path
+                fsiPath = "fsi.exe";
+            }
 
             var si = GetStartInfo(fsiPath, string.Join(" ", args));
             var p = Process.Start(si);
